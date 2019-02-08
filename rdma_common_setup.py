@@ -235,18 +235,6 @@ class TestBedSetup:
         cobj1.password = self.host1_passwd
         cobj1.os_type = self.host1_os_type
         cobj1.io_intf = self.host1_io_intf
-        #try:
-        #    hdl1 = ConnectHandler(ip=self.host1_tuple.mgmt_ip, device_type='linux',
-        #                          username=self.host1_tuple.username, password=self.host1_tuple.password)
-        #    hdl1.hostip = self.host1_mgmt_ip
-        #    hdl1.hostname = self.host1_io_name
-        #    hdl1.username = self.host1_username
-        #    hdl1.password = self.host1_passwd
-        #    hdl1.os_type = self.host1_os_type
-        #    hdl1.io_intf = self.host1_io_intf
-        #except:
-        #    log.error("login to server {} failed".format(self.host1_tuple.ipv4addr))
-        #    return 0
 
         cobj2 = connect(log, connect_type='NETMIKO', hostip=self.host2_tuple.mgmt_ip, username=self.host2_tuple.username, password=self.host2_tuple.password)
         if cobj2.connect_to_node():
@@ -257,27 +245,10 @@ class TestBedSetup:
         cobj2.password = self.host2_passwd
         cobj2.os_type = self.host2_os_type
         cobj2.io_intf = self.host2_io_intf
-        #try:
-        #    hdl2 = ConnectHandler(ip=self.host2_tuple.mgmt_ip, device_type='linux',
-        #                          username=self.host2_tuple.username, password=self.host2_tuple.password)
-        #    hdl2.hostip = self.host2_mgmt_ip
-        #    hdl2.hostname = self.host2_io_name
-        #    hdl2.username = self.host2_username
-        #    hdl2.password = self.host2_passwd
-        #    hdl2.os_type = self.host2_os_type
-        #    hdl2.io_intf = self.host2_io_intf
-        #except:
-        #    log.error("login to server {} failed".format(self.host2_tuple.ipv4addr))
-        #    return 0
         self.rdma_testbed_params['hdl1'] = cobj1
         self.rdma_testbed_params['hdl2'] = cobj2
-        #self.rdma_testbed_params['hdl1'] = hdl1
-        #self.rdma_testbed_params['hdl2'] = hdl2
-        #print("THIS IS FOR DEBUG %s " % self.rdma_testbed_params['hdl1'].os_type)
-        #print("THIS IS FOR DEBUG %s " % self.rdma_testbed_params['hdl2'].os_type)
 
         for hdl in [self.rdma_testbed_params['hdl1'], self.rdma_testbed_params['hdl2']]:
-            print("this is debug for os type %s " % hdl.os_type)
             if hdl.os_type == 'linux':
                 hdl.execute('export PATH="$PATH:/root/drivers-linux/rdma-core/build/bin"')
                 hdl.execute('export PATH="$PATH:/root/drivers-linux/perftest"')
@@ -296,30 +267,22 @@ class TestBedSetup:
         host2_intf_obj = Interface(self.rdma_testbed_params['hdl2'], self.rdma_testbed_params['hdl2'].io_intf, log)
         host1_intf_obj.configure(self.host1_config_dict)
         host2_intf_obj.configure(self.host2_config_dict)
-        #if self.host1_os_type == 'linux':
         if cobj1.os_type == 'linux':
             host1_gid = rdma_utils.GetgidIndex(self.rdma_testbed_params['hdl1'], log)
             host1_gid_index = host1_gid.getGidIndex(self.host1_io_v4)
             self.rdma_testbed_params['host1_gid_index'] = host1_gid_index
-            log.info("debug only: host1 gid index %s" % host1_gid_index)
-        #if self.host1_os_type == 'frebsd':
         if cobj1.os_type == 'freebsd':
             host1_gid_index = "1"
             self.rdma_testbed_params['host1_gid_index'] = host1_gid_index
-            log.info("debug only: host1 gid index %s" % host1_gid_index)
-        #if self.host2_os_type == 'linux':
         if cobj2.os_type == 'linux':
             host2_gid = rdma_utils.GetgidIndex(self.rdma_testbed_params['hdl2'], log)
             host2_gid_index = host2_gid.getGidIndex(self.host2_io_v4)
             self.rdma_testbed_params['host2_gid_index'] = host2_gid_index
-            log.info("debug only: host2 gid index %s" % host2_gid_index)
-        #if self.host2_os_type == 'freebsd':
         if cobj2.os_type == 'freebsd':
             host2_gid_index = "1"
             self.rdma_testbed_params['host2_gid_index'] = host2_gid_index
-            log.info("debug only: host2 gid index %s" % host2_gid_index)
 
         ping_obj = verifyPing(self.rdma_testbed_params['hdl2'], log)
         ping_obj.ping(self.host1_io_v4)
-        
+
         return self.rdma_testbed_params
