@@ -12,13 +12,13 @@ if (Test-Path $ESXI_OFFLINE_DEPOT -PathType Leaf)
 else
 {
     write-host "No ESXi Depot Image, Exiting script"
+    exit
 }
 
 write-host "Checking for IONIC driver offline bundle"
 if (Test-Path $IONIC_OFFLINE_BUNDLE -PathType Leaf)
 {
     write-host "IONIC Driver Offline bundle found"
-    exit
 }
 
 else
