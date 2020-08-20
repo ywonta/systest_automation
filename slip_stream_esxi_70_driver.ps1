@@ -6,13 +6,25 @@ $ISO_PATH = 'C:\ESXi_70'
 write-host "Checking ESXi offline depot image"
 if (Test-Path $ESXI_OFFLINE_DEPOT -PathType Leaf)
 {
-    write-host "ESXi Depot image found!"
+    write-host "ESXi Depot Image found!"
+}
+
+else
+{
+    write-host "No ESXi Depot Image, Exiting script"
 }
 
 write-host "Checking for IONIC driver offline bundle"
 if (Test-Path $IONIC_OFFLINE_BUNDLE -PathType Leaf)
 {
     write-host "IONIC Driver Offline bundle found"
+    exit
+}
+
+else
+{
+    write-host "No ESXi Ionic Driver, Exiting script"
+    exit
 }
 
 write-host "Adding offline depot image"
